@@ -44,9 +44,9 @@ namespace motuiDotnetSdkDemo
         private static string OpenMemberid { get; set; }
 
         /// <summary>
-        /// 生成机器人的序号
+        /// 登录生成的机器人序号
         /// </summary>
-        private static string WeixinRobotId { get; set; }
+        private static string RobotInfoId { get; set; }
         /// <summary>
         /// 生机器人数据库的序号
         /// </summary>
@@ -64,7 +64,7 @@ namespace motuiDotnetSdkDemo
             OpenKey = openkey;
             OpenMerchantId = openMerchantId;
             // postData内容是账号昵称和头像,可以不填写
-            var html = PostHtml("/api/wxrobot/auth/createOpenMember", "{\"avatar\":\"\",\"nickname\": \"\"}", true);
+            var html = PostHtml("/api/wxrobot/auth/createOpenMember", "{\"avatar\":\"\",\"nickname\": \"\"}");
             var jsonOpenMember = JsonConvert.DeserializeObject<Response<OpenMember>>(html);
             // 判断返回数据的错误代码是否等于0
             if (jsonOpenMember.Errcode == 0)
@@ -79,11 +79,11 @@ namespace motuiDotnetSdkDemo
         /// <returns></returns>
         internal static Response<LoginQrcode> LoginQrcode()
         {
-            var html = GetHtml("/api/wxrobot/auth/loginQrcode?type=createWeixinRobot", true);
+            var html = GetHtml("/api/wxrobot/auth/loginQrcode?type=createWeixinRobot");
             var jsonLoginQrcode = JsonConvert.DeserializeObject<Response<LoginQrcode>>(html);
             if(jsonLoginQrcode.Errcode == 0)
             {
-                WeixinRobotId = jsonLoginQrcode.Data.RobotInfoId.ToString();
+                RobotInfoId = jsonLoginQrcode.Data.RobotInfoId.ToString();
             }
             return jsonLoginQrcode;
         }
@@ -93,7 +93,7 @@ namespace motuiDotnetSdkDemo
         /// <returns></returns>
         internal static Response<LoginProgress> LoginProgress()
         {
-            var html = GetHtml($"/api/wxrobot/auth/getLoginProgress?robotInfoId={WeixinRobotId}",true);
+            var html = GetHtml($"/api/wxrobot/auth/getLoginProgress?robotInfoId={RobotInfoId}");
             var jsonLoginProgress = JsonConvert.DeserializeObject<Response<LoginProgress>>(html);
             WeixinId = jsonLoginProgress.Data?.WeixinRobot?.Weixinid.ToString();
             return jsonLoginProgress;
@@ -247,7 +247,7 @@ namespace motuiDotnetSdkDemo
         /// 发送post请求
         /// </summary>
         /// <returns></returns>
-        private static string PostHtml(string url, string postData, bool isLogin = false)
+        private static string PostHtml(string url, string postData)
         {
             HttpHelper http = new HttpHelper();
             HttpItem item = new HttpItem()
@@ -270,11 +270,7 @@ namespace motuiDotnetSdkDemo
             {
                 item.Header.Add("openMemberid", OpenMemberid);
             }
-            if (!string.IsNullOrEmpty(WeixinRobotId) && isLogin)
-            {
-                item.Header.Add("robotWeixinid", WeixinRobotId);
-            }
-            if (!string.IsNullOrEmpty(WeixinId) && !isLogin)
+            if (!string.IsNullOrEmpty(WeixinId))
             {
                 item.Header.Add("robotWeixinid", WeixinId);
             }
@@ -292,7 +288,7 @@ namespace motuiDotnetSdkDemo
         /// 发送get请求
         /// </summary>
         /// <returns></returns>
-        private static string GetHtml(string url,bool isLogin = false)
+        private static string GetHtml(string url)
         {
 
             HttpHelper http = new HttpHelper();
@@ -321,11 +317,7 @@ namespace motuiDotnetSdkDemo
             {
                 item.Header.Add("openMemberid", OpenMemberid);
             }
-            if (!string.IsNullOrEmpty(WeixinRobotId) && isLogin)
-            {
-                item.Header.Add("robotWeixinid", WeixinRobotId);
-            }
-            if (!string.IsNullOrEmpty(WeixinId) && !isLogin)
+            if (!string.IsNullOrEmpty(WeixinId))
             {
                 item.Header.Add("robotWeixinid", WeixinId);
             }

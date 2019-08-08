@@ -223,6 +223,16 @@ namespace motuiDotnetSdkDemo
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button10_Click(object sender, EventArgs e)
+        {
+
+        }
+
         #region http服务器
         /// <summary>
         /// 开启http服务器
@@ -259,7 +269,7 @@ namespace motuiDotnetSdkDemo
         /// <returns></returns>
         static string Request(HttpListenerRequest request)
         {
-            string temp = "welcome to linezero!";
+            string temp = "welcome!";
             if (request.HttpMethod.ToLower().Equals("get"))
             {
                 //GET请求处理
@@ -290,7 +300,7 @@ namespace motuiDotnetSdkDemo
                     {
                         Form1.MainForm.OnLog($"机器人收到消息:{openMemberid}的微信{robotWeixinid},收到了{eventName},内容{base64Body}", "通知");
                     });
-
+                    temp = "OK";
                 }
             }
             return temp;
@@ -312,8 +322,9 @@ namespace motuiDotnetSdkDemo
             return dataBytes;
         }
 
+
         #endregion
 
-
+        
     }
 }
